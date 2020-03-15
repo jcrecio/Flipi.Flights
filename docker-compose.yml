@@ -1,7 +1,7 @@
 version: "3.3"
 services:
     flightsapi:
-        image: ${DOCKER_REGISTRY-}flightsapi
+        # image: ${DOCKER_REGISTRY-}flightsapi
         build:
             context: .
             dockerfile: Flipi.FlightsManager/Dockerfile
@@ -10,10 +10,11 @@ services:
         links:
             - flightsdatabase
     filler:
-        image: ${DOCKER_REGISTRY-}filler
+        # image: ${DOCKER_REGISTRY-}filler
         build:
             context: .
             dockerfile: Flipi.Filler/Dockerfile
+        command: python main.py
         volumes:
             - .:/flights
         links:
