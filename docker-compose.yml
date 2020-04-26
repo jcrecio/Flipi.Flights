@@ -1,28 +1,33 @@
 version: "3.3"
+
+networks:
+    overnet:
+      external:
+          name: overnet
+
 services:
-    flightsapi:
-        # image: ${DOCKER_REGISTRY-}flightsapi
-        build:
-            context: .
-            dockerfile: Flipi.FlightsManager/Dockerfile
-        volumes:
-            - .:/flights
-        links:
-            - flightsdatabase
     filler:
-        # image: ${DOCKER_REGISTRY-}filler
-        build:
-            context: .
-            dockerfile: Flipi.Filler/Dockerfile
+        image: "jcrecio/flipi-filler:latest"
         command: python main.py
+        networks:
+            - overnet
         volumes:
             - .:/flights
-        links:
-            - flightsdatabase
-    flightsdatabase:
-        image: mongo:latest
-        deploy:
-            restart_policy:
-                condition: always
-        ports:
-            - "37017:27017"
+        # links:
+        #     - flightsdatabase
+    # flightsapi:
+    #     # image: ${DOCKER_REGISTRY-}flightsapi
+    #     build:
+    #         context: .
+    #         dockerfile: Flipi.FlightsManager/Dockerfile
+    #     volumes:
+    #         - .:/flights
+    #     links:
+    #         - flightsdatabase
+    # flightsdatabase:
+    #     image: mongo:latest
+    #     deploy:
+    #         restart_policy:
+    #             condition: always
+    #     ports:
+    #         - "37017:27017"

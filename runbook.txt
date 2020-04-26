@@ -1,0 +1,23 @@
+*******************************
+SWARM/INTEGRATED EXECUTION
+
+1. The image for the python flask api needs to be built and pushed into the registry
+docker login
+
+docker build -t jcrecio/flipi-filler:latest -f ./Dockerfile .
+docker push jcrecio/flipi-filler:latest
+
+
+2. Start the swarm (if not yet)
+docker swarm init
+
+3. Create overlay network
+docker network create -d overlay overnet
+
+4. Deploy into the swarm:
+docker stack deploy --compose-file docker-compose-swarm.yml flipifiller
+
+******************************
+LOCAL/ISOLATED EXECUTION (without swarm)
+docker-compose -f docker-compose.yml build
+docker-compose -f docker-compose.yml up
