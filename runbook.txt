@@ -15,7 +15,7 @@ docker swarm init
 docker network create -d overlay overnet
 
 4. Deploy into the swarm:
-docker stack deploy --compose-file docker-compose-swarm.yml flipifiller
+docker stack deploy --compose-file docker-compose.yml flipifiller
 
 ******************************
 LOCAL/ISOLATED EXECUTION (without swarm)
