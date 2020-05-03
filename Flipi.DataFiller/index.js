@@ -1,38 +1,45 @@
-const kafka = require('kafka-node');
 const config = require('./config');
+import consumerBuilder from './src/message-consumer';
 
-try {
-  var kafkaClientOptions = {
-    clientId: 'kafkafiller',
-    kafkaHost : config.kafka_server,//,broker2:9092,broker3:9092',
-    autoConnect: true,
-    connectTimeout: 5000,
-    requestTimeout: 5000
-  };
-  
-  const client = new kafka.KafkaClient(kafkaClientOptions);
-  let consumer = new kafka.Consumer(
-    client,
-    [
-      {
-        topic: kafka_server.kafka_topic
-      }
-    ],
-    {
-      autoCommit: true,
-      fetchMaxWaitMs: 1000,
-      fetchMaxBytes: 1024 * 1024,
-      encoding: 'utf8',
-      fromOffset: false
+let consumer = consumerBuilder(config.kafka_consumer_mode);
+
+let i = 0;
+async function main() {
+    while (true) {
+        const chunk = consumer.read(1024);
+        if (!chunk) {
+            console.log('Sleep for 5 second \n');
+            await sleep(5 * 1000);
+            continue;
+        } else {
+            i += 1;
+            let chatlog = JSON.parse(chunk.value);
+            console.log(util.inspect(JSON.stringify(chatlog)));
+            console.log(i);
+        }
     }
-  );
-  consumer.on('message', async function (message) {
-    console.log('kafka-> ', message.value);
-  })
-  consumer.on('error', function (err) {
-    console.log('error', err);
-  });
 }
-catch (e) {
-  console.log(e);
-}
+main();
+
+// consumer.on('message', async function (message) {
+//   console.log(`[${new Date(Date.now()).toLocaleString()}] Message consumed: ${message.value}`);
+// })
+// consumer.on('error', function (err) {
+//   console.log(`[${new Date(Date.now()).toLocaleString()}] ERROR consuming message: ${err}`);
+// });
+
+
+
+
+
+// const { MongoClient } = require('mongodb');
+
+// const client = new MongoClient(config.mongo_server);
+
+// try {
+//     await client.connect();
+// } catch (e) {
+//     console.error(e);
+// } finally {
+//     await client.close();
+// }
