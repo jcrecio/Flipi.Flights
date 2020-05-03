@@ -1,5 +1,7 @@
-FROM python:3
-WORKDIR /filler
-ADD ./requirements.txt /filler/requirements.txt
-RUN pip install -r requirements.txt
-ADD . /filler
+FROM node:latest
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 8080
+CMD [ "node", "index.js" ]

@@ -8,13 +8,19 @@ networks:
 services:
     filler:
         image: "jcrecio/flipi-filler:latest"
-        command: python main.py
+        command: node index.js
         networks:
             - overnet
+        ports:
+            - "8191:8191"
         volumes:
             - .:/flights
-        # links:
-        #     - flightsdatabase
+    flightsdatabase:
+        image: mongo:latest
+        networks:
+            - overnet
+        ports:
+            - "17017:17017"
     # flightsapi:
     #     # image: ${DOCKER_REGISTRY-}flightsapi
     #     build:
@@ -24,10 +30,3 @@ services:
     #         - .:/flights
     #     links:
     #         - flightsdatabase
-    # flightsdatabase:
-    #     image: mongo:latest
-    #     deploy:
-    #         restart_policy:
-    #             condition: always
-    #     ports:
-    #         - "37017:27017"
